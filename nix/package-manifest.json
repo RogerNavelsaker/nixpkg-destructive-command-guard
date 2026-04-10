@@ -1,0 +1,19 @@
+{
+  "stubbed": false,
+  "source": {
+    "path": "upstream",
+    "version": "0.4.3",
+    "rev": "b86e95d97f1f74db7420e58f334d8535d27f25c7"
+  },
+  "package": {
+    "version": "0.4.3"
+  },
+  "binary": {
+    "name": "dcg"
+  },
+  "meta": {
+    "description": "Claude Code hook that blocks destructive commands before they execute",
+    "homepage": "https://github.com/Dicklesworthstone/destructive_command_guard",
+    "licenseSpdx": "MIT"
+  }
+}
