@@ -1,13 +1,16 @@
 {
   "stubbed": false,
   "source": {
-    "path": "upstream",
+    "type": "github",
+    "owner": "Dicklesworthstone",
+    "repo": "destructive_command_guard",
+    "channel": "github-head",
+    "defaultBranch": "main",
     "version": "0.4.3",
-    "rev": "b86e95d97f1f74db7420e58f334d8535d27f25c7"
+    "rev": "b86e95d97f1f74db7420e58f334d8535d27f25c7",
+    "hash": "sha256-Sv5uhzBgt2BuT9UBF1++6+qUdELf7fmtdLiuShHvsyk="
   },
-  "package": {
-    "version": "0.4.3"
-  },
+  "package": {},
   "binary": {
     "name": "dcg"
   },

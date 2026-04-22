@@ -1,8 +1,30 @@
-{ bash, lib, makeWrapper, rustPlatform }:
+{ bash, fetchFromGitHub, lib, makeWrapper, runCommand, rustPlatform }:
 
 let
   manifest = builtins.fromJSON (builtins.readFile ./package-manifest.json);
-  sourceRoot = lib.cleanSource ../upstream;
+  upstreamSrc = fetchFromGitHub {
+    owner = manifest.source.owner;
+    repo = manifest.source.repo;
+    rev = manifest.source.rev;
+    hash = manifest.source.hash;
+  };
+  sourceRoot = runCommand "${manifest.binary.name}-${manifest.source.version}-src" {} ''
+    mkdir -p "$out/src"
+    mkdir -p "$out/benches"
+    mkdir -p "$out/patches"
+    cp ${upstreamSrc}/Cargo.toml "$out/Cargo.toml"
+    cp ${upstreamSrc}/Cargo.lock "$out/Cargo.lock"
+    if [ -f ${upstreamSrc}/build.rs ]; then
+      cp ${upstreamSrc}/build.rs "$out/build.rs"
+    fi
+    if [ -d ${upstreamSrc}/benches ]; then
+      cp -R ${upstreamSrc}/benches/. "$out/benches/"
+    fi
+    if [ -d ${upstreamSrc}/patches ]; then
+      cp -R ${upstreamSrc}/patches/. "$out/patches/"
+    fi
+    cp -R ${upstreamSrc}/src/. "$out/src/"
+  '';
   builtBinary = manifest.binary.upstreamName or manifest.binary.name;
   aliasOutputs = manifest.binary.aliases or [ ];
   aliasScripts = lib.concatMapStrings
@@ -20,11 +42,11 @@ EOF
 in
 rustPlatform.buildRustPackage {
   pname = manifest.binary.name;
-  version = manifest.package.version;
+  version = manifest.source.version;
   src = sourceRoot;
 
   cargoLock = {
-    lockFile = ../upstream/Cargo.lock;
+    lockFile = sourceRoot + "/Cargo.lock";
   };
 
   cargoBuildFlags =
