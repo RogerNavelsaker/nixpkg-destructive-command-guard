@@ -6,12 +6,12 @@
     "repo": "destructive_command_guard",
     "channel": "github-head",
     "defaultBranch": "main",
-    "version": "0.4.7",
-    "rev": "ad202193fd8e4fbdf1ff6a7cde6679f564f1e1a8",
-    "hash": "sha256-aW51kL6Jy1TwdFPdkSLLXosuCDglz1NUBa2/04HnDlc="
+    "version": "0.4.11",
+    "rev": "cb09a7ec06f3070f6a5531c57a4408de90b62295",
+    "hash": "sha256-WfBq7ZxNCIJ2Gwk6dFmYOWt+OvD65vw/kVK6h+SArd0="
   },
   "package": {
-    "version": "0.4.7"
+    "version": "0.4.11"
   },
   "binary": {
     "name": "dcg"
