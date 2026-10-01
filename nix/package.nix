@@ -12,6 +12,7 @@ let
     mkdir -p "$out/src"
     mkdir -p "$out/benches"
     mkdir -p "$out/patches"
+    mkdir -p "$out/vendor"
     cp ${upstreamSrc}/Cargo.toml "$out/Cargo.toml"
     cp ${upstreamSrc}/Cargo.lock "$out/Cargo.lock"
     if [ -f ${upstreamSrc}/build.rs ]; then
@@ -22,6 +23,9 @@ let
     fi
     if [ -d ${upstreamSrc}/patches ]; then
       cp -R ${upstreamSrc}/patches/. "$out/patches/"
+    fi
+    if [ -d ${upstreamSrc}/vendor ]; then
+      cp -R ${upstreamSrc}/vendor/. "$out/vendor/"
     fi
     cp -R ${upstreamSrc}/src/. "$out/src/"
   '';
