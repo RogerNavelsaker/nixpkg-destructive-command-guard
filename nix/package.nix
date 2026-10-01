@@ -14,6 +14,11 @@ let
     mkdir -p "$out/patches"
     mkdir -p "$out/vendor"
     cp ${upstreamSrc}/Cargo.toml "$out/Cargo.toml"
+    # The upstream snapshot declares a future MSRV that is newer than the
+    # compiler supplied by nixpkgs.  The crate uses edition-2024 features,
+    # which are supported by the nixpkgs compiler; avoid rejecting the build
+    # solely on the unreleased metadata value.
+    substituteInPlace "$out/Cargo.toml" --replace-fail 'rust-version = "1.95"' 'rust-version = "1.85"'
     cp ${upstreamSrc}/Cargo.lock "$out/Cargo.lock"
     cp ${upstreamSrc}/README.md "$out/README.md"
     cp ${upstreamSrc}/LICENSE "$out/LICENSE"
