@@ -30,6 +30,7 @@ let
       cp -R ${upstreamSrc}/vendor/. "$out/vendor/"
     fi
     cp -R ${upstreamSrc}/src/. "$out/src/"
+    substituteInPlace "$out/Cargo.toml" --replace-fail 'rust-version = "1.95"' 'rust-version = "1.89"'
   '';
   builtBinary = manifest.binary.upstreamName or manifest.binary.name;
   aliasOutputs = manifest.binary.aliases or [ ];
