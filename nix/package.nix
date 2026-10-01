@@ -15,6 +15,8 @@ let
     mkdir -p "$out/vendor"
     cp ${upstreamSrc}/Cargo.toml "$out/Cargo.toml"
     cp ${upstreamSrc}/Cargo.lock "$out/Cargo.lock"
+    cp ${upstreamSrc}/README.md "$out/README.md"
+    cp ${upstreamSrc}/LICENSE "$out/LICENSE"
     if [ -f ${upstreamSrc}/build.rs ]; then
       cp ${upstreamSrc}/build.rs "$out/build.rs"
     fi
