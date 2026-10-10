@@ -12,8 +12,11 @@ let
     mkdir -p "$out/src"
     mkdir -p "$out/benches"
     mkdir -p "$out/patches"
+    mkdir -p "$out/vendor"
     cp ${upstreamSrc}/Cargo.toml "$out/Cargo.toml"
     cp ${upstreamSrc}/Cargo.lock "$out/Cargo.lock"
+    cp ${upstreamSrc}/README.md "$out/README.md"
+    cp ${upstreamSrc}/LICENSE "$out/LICENSE"
     if [ -f ${upstreamSrc}/build.rs ]; then
       cp ${upstreamSrc}/build.rs "$out/build.rs"
     fi
@@ -23,7 +26,11 @@ let
     if [ -d ${upstreamSrc}/patches ]; then
       cp -R ${upstreamSrc}/patches/. "$out/patches/"
     fi
+    if [ -d ${upstreamSrc}/vendor ]; then
+      cp -R ${upstreamSrc}/vendor/. "$out/vendor/"
+    fi
     cp -R ${upstreamSrc}/src/. "$out/src/"
+    substituteInPlace "$out/Cargo.toml" --replace-fail 'rust-version = "1.95"' 'rust-version = "1.85"'
   '';
   builtBinary = manifest.binary.upstreamName or manifest.binary.name;
   aliasOutputs = manifest.binary.aliases or [ ];
@@ -51,7 +58,7 @@ rustPlatform.buildRustPackage {
 
   cargoBuildFlags =
     (lib.optionals (manifest.binary ? package) [ "-p" manifest.binary.package ])
-    ++ [ "--bin=${builtBinary}" ];
+    ++ [ "--bin=${builtBinary}" "--ignore-rust-version" ];
 
   nativeBuildInputs = [ makeWrapper ];
   doCheck = false;
