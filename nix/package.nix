@@ -1,4 +1,4 @@
-{ bash, fetchFromGitHub, lib, makeWrapper, runCommand, rustPlatform }:
+{ bash, fetchFromGitHub, lib, makeWrapper, runCommand, rustPlatform, sqlite }:
 
 let
   manifest = builtins.fromJSON (builtins.readFile ./package-manifest.json);
@@ -24,6 +24,13 @@ let
       cp -R ${upstreamSrc}/patches/. "$out/patches/"
     fi
     cp -R ${upstreamSrc}/src/. "$out/src/"
+    if [ -d ${upstreamSrc}/release ]; then
+      cp -R ${upstreamSrc}/release "$out/release"
+    fi
+    if [ -d ${upstreamSrc}/vendor ]; then
+      cp -R ${upstreamSrc}/vendor "$out/vendor"
+      chmod -R u+w "$out/vendor"
+    fi
   '';
   builtBinary = manifest.binary.upstreamName or manifest.binary.name;
   aliasOutputs = manifest.binary.aliases or [ ];
@@ -54,6 +61,7 @@ rustPlatform.buildRustPackage {
     ++ [ "--bin=${builtBinary}" ];
 
   nativeBuildInputs = [ makeWrapper ];
+  buildInputs = [ sqlite ];
   doCheck = false;
 
   env = {
@@ -61,6 +69,11 @@ rustPlatform.buildRustPackage {
     VERGEN_GIT_SHA = manifest.source.rev;
     VERGEN_GIT_DIRTY = "false";
   };
+
+  # cargo-setup-hook forces AWS_LC_SYS_USE_SYSTEM=1 at build time; aws-lc-sys then fails without a system AWS-LC.
+  preBuild = ''
+    export AWS_LC_SYS_USE_SYSTEM=0
+  '';
 
   postInstall = ''
     if [ "${builtBinary}" != "${manifest.binary.name}" ]; then
